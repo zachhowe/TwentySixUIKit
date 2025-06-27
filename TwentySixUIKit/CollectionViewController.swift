@@ -140,12 +140,23 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.itemSize = CGSize(width: collectionView.bounds.width, height: cellState.height)
         }
+
+        if #available(iOS 26.0, *) {
+            // no-op
+        } else {
+            updatePropertiesBody()
+        }
     }
 
+    @available(iOS 26.0, *)
     override func updateProperties() {
         super.updateProperties()
 
-        let expandOrCollapseCellButton = viewModel.cellState == .collapsed 
+        updatePropertiesBody()
+    }
+
+    private func updatePropertiesBody() {
+        let expandOrCollapseCellButton = viewModel.cellState == .collapsed
             ? UIBarButtonItem(title: "Expand", style: .plain, target: self, action: #selector(expandOrCollapseCells))
             : UIBarButtonItem(title: "Collapse", style: .plain, target: self, action: #selector(expandOrCollapseCells))
 

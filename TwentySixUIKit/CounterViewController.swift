@@ -43,6 +43,7 @@ class CounterViewController: UIViewController {
 
     lazy var label = {
         let label = UILabel()
+        label.textAlignment = .center
         label.font = .systemFont(ofSize: 36)
         return label
     }()
@@ -73,8 +74,22 @@ class CounterViewController: UIViewController {
         decrementButton.addTarget(self, action: #selector(onDecrementButtonAction), for: .primaryActionTriggered)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #available(iOS 26.0, *) {
+            // no-op
+        } else {
+            updatePropertiesBody()
+        }
+    }
+
+    @available(iOS 26.0, *)
     override func updateProperties() {
         super.updateProperties()
+        updatePropertiesBody()
+    }
+
+    private func updatePropertiesBody() {
         label.textColor = viewModel.textColor
         label.text = viewModel.text
         tabBarItem.badgeValue = "\(viewModel.count)"
