@@ -175,10 +175,24 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     }
 
     @objc private func expandOrCollapseCells() {
-        if viewModel.cellState == .collapsed {
-            viewModel.cellState = .expanded
+        if #available(iOS 26.0, *) {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .flushUpdates) {
+                if self.viewModel.cellState == .collapsed {
+                    self.viewModel.cellState = .expanded
+                } else {
+                    self.viewModel.cellState = .collapsed
+                }
+            }
         } else {
-            viewModel.cellState = .collapsed
+            UIView.animate(withDuration: 0.3) {
+                if self.viewModel.cellState == .collapsed {
+                    self.viewModel.cellState = .expanded
+                } else {
+                    self.viewModel.cellState = .collapsed
+                }
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }
         }
     }
 }
